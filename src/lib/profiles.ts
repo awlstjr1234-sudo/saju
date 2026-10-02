@@ -1,3 +1,5 @@
+import type { CalendarType } from './calendar';
+
 export type SajuProfile = {
   id: string;
   profileName: string;
@@ -5,9 +7,24 @@ export type SajuProfile = {
   date: string;
   time: string;
   noTime: boolean;
+  calendarType?: CalendarType;
+  leapMonth?: boolean;
 };
 
 export const PROFILE_STORAGE_KEY = 'saju-profiles';
+const ACTIVE_PROFILE_STORAGE_KEY = 'saju-active-profile';
+
+export function loadActiveProfileId(): string {
+  return window.localStorage.getItem(ACTIVE_PROFILE_STORAGE_KEY) ?? '';
+}
+
+export function saveActiveProfileId(profileId: string): void {
+  if (profileId) {
+    window.localStorage.setItem(ACTIVE_PROFILE_STORAGE_KEY, profileId);
+  } else {
+    window.localStorage.removeItem(ACTIVE_PROFILE_STORAGE_KEY);
+  }
+}
 
 export function loadProfiles(): SajuProfile[] {
   const saved = window.localStorage.getItem(PROFILE_STORAGE_KEY);

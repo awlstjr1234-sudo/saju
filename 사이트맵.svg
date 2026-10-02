@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1320" viewBox="0 0 1800 1320" role="img" aria-labelledby="title description">
+  <title id="title">사주·운세 앱 실제 화면 흐름</title>
+  <desc id="description">메인에서 프로필 생성 또는 타로로 이동합니다. 프로필 저장 뒤에는 프로필 선택, 새 프로필, 삭제와 사주·오늘의 운세·지정일 운세 탭이 표시됩니다.</desc>
+  <rect x="24" y="24" width="1752" height="1272" fill="#fffaf6" stroke="#211d1a" stroke-width="2" />
+  <text x="64" y="82" font-family="sans-serif" font-size="36" font-weight="700" fill="#211d1a">사주 · 오늘의 운세 · 타로</text>
+  <text x="66" y="118" font-family="sans-serif" font-size="18" fill="#665e58">현재 웹앱에 표시되는 메뉴와 버튼, 결과 흐름</text>
+
+  <g fill="none" stroke="#211d1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M900 210 V246 H550 V270" />
+    <path d="M900 246 H1400 V270" />
+
+    <path d="M550 344 V375" />
+    <path d="M550 550 V590" />
+    <path d="M550 664 V708" />
+
+    <path d="M520 814 V870 H280 V900" />
+    <path d="M520 870 H560 V900" />
+    <path d="M560 870 H850 V900" />
+
+    <path d="M280 964 V1000" />
+    <path d="M560 964 V1000" />
+    <path d="M850 964 V985" />
+    <path d="M850 1047 V1066" />
+    <path d="M850 1128 V1147" />
+
+    <path d="M1400 344 V394 H1270 V430" />
+    <path d="M1400 394 H1550 V430" />
+    <path d="M1270 504 V548" />
+    <path d="M1550 504 V548" />
+  </g>
+
+  <g font-family="sans-serif" text-anchor="middle" fill="#171923">
+    <rect x="770" y="136" width="260" height="74" rx="37" fill="#8294d9" />
+    <text x="900" y="182" font-size="28" font-weight="700">메인</text>
+
+    <rect x="390" y="270" width="320" height="74" rx="37" fill="#8294d9" />
+    <text x="550" y="316" font-size="26" font-weight="700">프로필 생성</text>
+
+    <rect x="1270" y="270" width="260" height="74" rx="37" fill="#8294d9" />
+    <text x="1400" y="316" font-size="26" font-weight="700">타로</text>
+
+    <rect x="80" y="375" width="940" height="175" rx="16" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="550" y="411" font-size="22" font-weight="700">프로필 입력 항목</text>
+    <text x="550" y="450" font-size="19">
+      <tspan x="550" dy="0">프로필 이름 · 생년월일(달력) · 양력 / 음력</tspan>
+      <tspan x="550" dy="31">음력 월(평달 / 윤달) · 태어난 시간 · 태어난 시간을 몰라요</tspan>
+    </text>
+
+    <rect x="330" y="590" width="440" height="74" rx="37" fill="#8294d9" />
+    <text x="550" y="636" font-size="22" font-weight="700">프로필 저장하고 분석 보기</text>
+
+    <rect x="55" y="708" width="990" height="560" rx="16" fill="#fffdfb" stroke="#bcb3ac" stroke-width="2" />
+    <text x="550" y="742" font-size="19" font-weight="700" fill="#665e58">저장 후 화면</text>
+
+    <rect x="90" y="760" width="390" height="54" rx="10" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="285" y="795" font-size="18" font-weight="700">사용 중인 프로필 선택</text>
+    <rect x="510" y="760" width="220" height="54" rx="27" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="620" y="795" font-size="18" font-weight="700">새 프로필</text>
+    <rect x="760" y="760" width="220" height="54" rx="27" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="870" y="795" font-size="18" font-weight="700">프로필 삭제</text>
+
+    <rect x="165" y="900" width="230" height="64" rx="32" fill="#8294d9" />
+    <text x="280" y="940" font-size="21" font-weight="700">사주</text>
+    <rect x="445" y="900" width="230" height="64" rx="32" fill="#8294d9" />
+    <text x="560" y="940" font-size="21" font-weight="700">오늘의 운세</text>
+    <rect x="735" y="900" width="230" height="64" rx="32" fill="#8294d9" />
+    <text x="850" y="940" font-size="21" font-weight="700">지정일 운세</text>
+
+    <rect x="145" y="1000" width="270" height="62" rx="31" fill="#dfe5ff" stroke="#8294d9" stroke-width="2" />
+    <text x="280" y="1039" font-size="18" font-weight="700">사주팔자 풀이하기</text>
+    <rect x="145" y="1080" width="270" height="90" rx="14" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="280" y="1133" font-size="19" font-weight="700">사주 결과</text>
+
+    <rect x="425" y="1000" width="270" height="62" rx="31" fill="#dfe5ff" stroke="#8294d9" stroke-width="2" />
+    <text x="560" y="1039" font-size="18" font-weight="700">오늘의 운세 보기</text>
+    <rect x="425" y="1080" width="270" height="90" rx="14" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="560" y="1133" font-size="19" font-weight="700">오늘의 운세 결과</text>
+
+    <rect x="735" y="985" width="230" height="62" rx="14" fill="#dfe5ff" stroke="#8294d9" stroke-width="2" />
+    <text x="850" y="1024" font-size="18" font-weight="700">날짜 달력 · 날짜 지정</text>
+    <rect x="735" y="1066" width="230" height="62" rx="31" fill="#dfe5ff" stroke="#8294d9" stroke-width="2" />
+    <text x="850" y="1105" font-size="18" font-weight="700">지정일 운세 보기</text>
+    <rect x="735" y="1147" width="230" height="75" rx="14" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="850" y="1192" font-size="18" font-weight="700">지정일 운세 결과</text>
+
+    <rect x="1160" y="430" width="220" height="74" rx="37" fill="#8294d9" />
+    <text x="1270" y="476" font-size="19" font-weight="700">오늘의 카드 뽑기</text>
+    <rect x="1420" y="430" width="260" height="74" rx="37" fill="#8294d9" />
+    <text x="1550" y="460" font-size="18" font-weight="700">
+      <tspan x="1550" dy="0">과거·현재·미래</tspan>
+      <tspan x="1550" dy="24">3장 스프레드</tspan>
+    </text>
+    <rect x="1160" y="548" width="220" height="100" rx="14" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="1270" y="605" font-size="19" font-weight="700">오늘의 카드 결과</text>
+    <rect x="1420" y="548" width="260" height="100" rx="14" fill="#f0f2ff" stroke="#8294d9" stroke-width="2" />
+    <text x="1550" y="592" font-size="18" font-weight="700">
+      <tspan x="1550" dy="0">과거 · 현재 · 미래</tspan>
+      <tspan x="1550" dy="25">카드 결과</tspan>
+    </text>
+  </g>
+</svg>

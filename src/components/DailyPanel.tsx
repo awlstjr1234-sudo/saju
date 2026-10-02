@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { buildDailyFortune, type DailyFortuneInput, type DailyFortuneResult } from '@/lib/dailyFortune';
-import { loadProfiles, type SajuProfile } from '@/lib/profiles';
+import { parseCalendarDate } from '@/lib/calendar';
+import type { SajuProfile } from '@/lib/profiles';
 import DailyResultView from './DailyResultView';
 
 function todayISO(): string {
@@ -10,76 +11,64 @@ function todayISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export default function DailyPanel() {
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
-  const [profiles, setProfiles] = useState<SajuProfile[]>([]);
-  const [selectedProfileId, setSelectedProfileId] = useState('');
+export default function DailyPanel({ profile, specificDate = false }: { profile: SajuProfile; specificDate?: boolean }) {
   const [result, setResult] = useState<DailyFortuneResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState('');
+  const dateInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setProfiles(loadProfiles());
+    setSelectedDate(todayISO());
   }, []);
 
-  function handleProfileChange(profileId: string) {
-    setSelectedProfileId(profileId);
-    const profile = profiles.find((item) => item.id === profileId);
-    if (!profile) return;
-    setName(profile.name);
-    setDate(profile.date);
-    setResult(null);
-    setError(null);
-  }
-
   function handleRun() {
-    if (!date) {
-      setError('생년월일을 입력해주세요.');
+    const solarDate = parseCalendarDate(profile.date, profile.calendarType ?? 'solar', profile.leapMonth ?? false);
+    if (!solarDate) {
+      setError('프로필의 생년월일을 확인해주세요.');
+      return;
+    }
+    const fortuneDate = specificDate ? selectedDate : todayISO();
+    if (!fortuneDate) {
+      setError('달력에서 날짜를 지정해주세요.');
       return;
     }
     setError(null);
-    const [y, m, d] = date.split('-').map(Number);
     const nextInput: DailyFortuneInput = {
-      name: name.trim() || '당신',
-      birthYear: y,
-      birthMonth: m,
-      birthDay: d,
-      todayISO: todayISO(),
+      name: profile.profileName || '당신',
+      birthYear: solarDate.year,
+      birthMonth: solarDate.month,
+      birthDay: solarDate.day,
+      todayISO: fortuneDate,
     };
     setResult(buildDailyFortune(nextInput));
   }
 
-  const maxDate = todayISO();
-
   return (
     <section>
       <fieldset>
-        <div className="profile-bar">
-          <div className="field">
-            <label htmlFor="d-profile">저장된 프로필</label>
-            <select id="d-profile" value={selectedProfileId} onChange={(e) => handleProfileChange(e.target.value)}>
-              <option value="">직접 입력</option>
-              {profiles.map((profile) => (
-                <option key={profile.id} value={profile.id}>
-                  {profile.profileName}
-                </option>
-              ))}
-            </select>
+        {specificDate && (
+          <div className="field-row">
+            <div className="field">
+              <label htmlFor="fortune-date">운세를 볼 날짜</label>
+              <input
+                id="fortune-date"
+                ref={dateInput}
+                type="date"
+                value={selectedDate}
+                onChange={(event) => setSelectedDate(event.target.value)}
+              />
+            </div>
+            <div className="field date-action">
+              <span className="label-spacer" aria-hidden="true">&nbsp;</span>
+              <button type="button" className="ghost" onClick={() => dateInput.current?.showPicker()}>
+                날짜 지정
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="field-row">
-          <div className="field">
-            <label htmlFor="d-name">이름 (선택)</label>
-            <input id="d-name" type="text" placeholder="예: 홍길동" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="field">
-            <label htmlFor="d-date">생년월일</label>
-            <input id="d-date" type="date" max={maxDate} value={date} onChange={(e) => setDate(e.target.value)} />
-          </div>
-        </div>
+        )}
         <div className="actions">
-          <button type="button" onClick={handleRun}>
-            오늘의 운세 보기
+          <button type="button" onClick={handleRun} disabled={specificDate && !selectedDate}>
+            {specificDate ? '지정일 운세 보기' : '오늘의 운세 보기'}
           </button>
         </div>
         <p className="hint">

@@ -104,6 +104,10 @@ h3 {
   padding: 0 6px;
   margin-top: 26px;
 }
+.nested-tabs {
+  margin: 22px 0 0;
+  padding: 0;
+}
 .tab {
   flex: 1;
   text-align: center;
@@ -141,6 +145,40 @@ h3 {
   border-radius: 0 10px 14px 14px;
   box-shadow: var(--shadow);
   padding: 28px clamp(16px, 4vw, 34px) 34px;
+}
+.profile-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.profile-toolbar .field {
+  flex: 1 1 220px;
+  max-width: 360px;
+}
+.profile-content {
+  padding-top: 22px;
+}
+.section-title {
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+.date-action {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  flex: 0 1 auto;
+}
+.label-spacer {
+  display: block;
+  height: 24px;
+  margin-bottom: 6px;
+}
+.date-action button {
+  white-space: nowrap;
 }
 
 fieldset {
@@ -186,7 +224,8 @@ label {
 }
 input[type='text'],
 input[type='date'],
-input[type='time'] {
+input[type='time'],
+input[type='number'] {
   width: 100%;
   padding: 10px 12px;
   font: inherit;
