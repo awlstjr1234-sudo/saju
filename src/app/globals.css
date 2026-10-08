@@ -497,82 +497,139 @@ button.ghost {
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
-.cards-row {
+.tarot-pick-area {
+  margin-top: 22px;
+}
+.tarot-pick-instruction,
+.tarot-reading-heading {
+  margin: 0 0 14px;
+  font-family: 'Song Myung', serif;
+  font-size: 19px;
+}
+.tarot-pick-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin-top: 6px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
 }
-.card {
-  perspective: 1000px;
-}
-.card-inner {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4.6;
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.card.revealed .card-inner {
-  transform: rotateY(180deg);
-}
-.card-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: 14px;
+.tarot-pick-card {
   display: flex;
+  min-height: 110px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 14px;
-  text-align: center;
-  border: 1px solid var(--border);
+  gap: 8px;
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  color: var(--gold);
+  background:
+    repeating-linear-gradient(45deg, transparent 0 8px, rgba(217, 168, 85, .13) 8px 16px),
+    linear-gradient(145deg, var(--navy), var(--surface-2));
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.tarot-pick-card:hover:not(:disabled) {
+  transform: translateY(-3px);
   box-shadow: var(--shadow);
 }
-.card-back {
-  background: repeating-linear-gradient(45deg, transparent 0 8px, rgba(169, 124, 47, 0.16) 8px 16px), var(--navy);
-  color: var(--gold);
-  font-family: 'Song Myung', serif;
+.tarot-pick-card span {
   font-size: 26px;
 }
-.card-front {
-  background: var(--surface);
-  transform: rotateY(180deg);
-  gap: 10px;
+.tarot-pick-card small {
+  font-size: 11px;
 }
-.card-badge {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+.tarot-pick-card:disabled {
+  opacity: .52;
+  cursor: default;
+}
+.tarot-pick-card.selected {
+  background: var(--surface-2);
+}
+.tarot-picked-count {
+  color: var(--ink-muted);
+  font-size: 14px;
+}
+.tarot-results {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Song Myung', serif;
-  font-size: 16px;
-  color: var(--accent-contrast);
-  flex-shrink: 0;
+  gap: 16px;
+  align-items: flex-start;
+  margin: 12px 0 20px;
+  flex-wrap: wrap;
 }
-.card-pos {
-  font-size: 11.5px;
+.tarot-result {
+  flex: 1 1 190px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.tarot-image-wrap {
+  max-width: 260px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.tarot-art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.tarot-art-reversed {
+  transform: rotate(180deg);
+}
+.tarot-result-position {
+  margin: 12px 0 0;
   color: var(--ink-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.card-title {
-  font-size: 17px;
-}
-.card-orient {
   font-size: 12px;
-  color: var(--gold);
+  text-align: center;
 }
-.card-meaning {
+.tarot-result-title {
+  margin: 2px 0 0;
+  font-family: 'Song Myung', serif;
+  font-size: 20px;
+  text-align: center;
+}
+.tarot-result .card-orient {
+  margin: 4px 0 12px;
+  color: var(--gold);
+  font-size: 12px;
+  text-align: center;
+}
+.tarot-explanation {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.tarot-explanation h4 {
+  margin: 10px 0 3px;
+  color: var(--gold);
   font-size: 13px;
+}
+.tarot-explanation p,
+.tarot-combination p {
+  margin: 0;
   color: var(--ink-muted);
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.tarot-combination {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.tarot-combination h3 {
+  margin-bottom: 8px;
+  color: var(--gold);
+  font-size: 18px;
+}
+.tarot-combination p + p {
+  margin-top: 10px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .card-inner {
+  .tarot-pick-card {
     transition: none;
   }
 }
@@ -608,6 +665,17 @@ button.ghost {
 }
 
 @media (max-width: 480px) {
+  .tarot-pick-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .tarot-pick-card {
+    min-height: 84px;
+  }
+  .tarot-results {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
   .pillars {
     grid-template-columns: repeat(2, 1fr);
   }

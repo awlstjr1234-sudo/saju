@@ -14,6 +14,11 @@ function newProfileId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
+function formatBirthTime(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 4);
+  return digits.length > 2 ? `${digits.slice(0, 2)}:${digits.slice(2)}` : digits;
+}
+
 export default function ProfileSetupPanel({ profileCount, onSave, onCancel }: ProfileSetupPanelProps) {
   const [profileName, setProfileName] = useState('');
   const [date, setDate] = useState('');
@@ -114,17 +119,17 @@ export default function ProfileSetupPanel({ profileCount, onSave, onCancel }: Pr
               id="profile-time"
               type="text"
               inputMode="numeric"
-              placeholder="예: 14:30"
+              placeholder="예: 00:00"
               value={time}
               disabled={noTime}
-              onChange={(event) => setTime(event.target.value)}
+              onChange={(event) => setTime(formatBirthTime(event.target.value))}
             />
           </div>
         </div>
         <div className="check-row">
           <input id="profile-no-time" type="checkbox" checked={noTime} onChange={(event) => setNoTime(event.target.checked)} />
           <label htmlFor="profile-no-time" style={{ margin: 0, textTransform: 'none', letterSpacing: 'normal', fontSize: 13.5 }}>
-            태어난 시간을 몰라요 (시주 제외)
+            태어난 시간을 몰라요 (사주 분석 시 시간 미입력으로 인한 오차가 발생할 수 있어요)
           </label>
         </div>
         <div className="actions">

@@ -136,8 +136,7 @@ export default function HomePage() {
       </main>
 
       <p className="footnote">
-        본 결과는 전통 만세력 계산법을 근사 구현한 오락용 콘텐츠예요. 절기 기준일은 연도별로 최대 하루
-        정도 오차가 있을 수 있고, 음력 생일·자시 경계 등 세부 규칙은 단순화되어 있어요.
+
       </p>
     </div>
   );

@@ -1,7 +1,4 @@
-// 정식 78장(메이저 22 + 마이너 56) 타로 덱. 생년월일 + 날짜를 시드로 사용해
-// 같은 날엔 항상 같은 카드가 나오도록 고정합니다.
-
-import { pick, seedRng, shuffle } from './random';
+// 정식 78장(메이저 22 + 마이너 56) 타로 덱.
 
 export interface DeckCard {
   id: string;
@@ -96,17 +93,95 @@ export interface DrawnCard {
   reversed: boolean;
 }
 
-export function drawDailyCard(seedKey: string, todayISO: string): DrawnCard {
-  const rng = seedRng(`tarot-daily|${seedKey}|${todayISO}`);
-  const card = pick(rng, DECK);
-  const reversed = rng() < 0.5;
-  return { position: '오늘의 카드', card, reversed };
+const MAJOR_ESSENCE: Record<string, string> = {
+  'major-0': '순수한 시작과 가능성의 원형이에요. 익숙한 기준을 잠시 내려놓고 새로운 경험을 받아들이는 용기를 말합니다.',
+  'major-1': '의지와 실행력을 현실로 바꾸는 창조자의 원형이에요. 이미 가진 재능과 도구를 어떻게 활용할지가 핵심입니다.',
+  'major-2': '침묵 속 지혜와 직관의 원형이에요. 아직 드러나지 않은 정보가 있으니 관찰하고 내면의 신호를 살펴보세요.',
+  'major-3': '생명력과 풍요를 키우는 양육자의 원형이에요. 돌봄과 창조성이 결실을 맺도록 충분한 시간과 자원을 주는 때입니다.',
+  'major-4': '질서와 책임을 세우는 통치자의 원형이에요. 안정적인 틀을 만들되 통제가 지나치게 경직되지 않는지 살피세요.',
+  'major-5': '전통과 배움을 전하는 스승의 원형이에요. 검증된 원칙과 믿을 만한 조언에서 다음 단계를 찾을 수 있습니다.',
+  'major-6': '사랑과 가치에 따른 선택의 원형이에요. 관계뿐 아니라 중요한 갈림길에서 무엇을 진심으로 원하는지 확인하세요.',
+  'major-7': '의지와 집중으로 전진하는 승리자의 원형이에요. 서로 다른 욕구를 한 방향으로 모으는 것이 성취의 조건입니다.',
+  'major-8': '온화한 용기와 자기 조절의 원형이에요. 강압보다 인내와 다정함으로 다루는 편이 더 큰 힘을 발휘합니다.',
+  'major-9': '고요한 성찰과 내면의 스승을 찾는 원형이에요. 혼자 생각할 공간을 확보하면 외부의 소음에 가려진 답이 보입니다.',
+  'major-10': '순환과 전환점의 원형이에요. 통제할 수 없는 흐름을 읽고 기회가 왔을 때 움직일 준비를 하는 것이 중요합니다.',
+  'major-11': '균형과 책임, 원인과 결과의 원형이에요. 감정보다 사실과 공정한 기준으로 상황을 판단해야 합니다.',
+  'major-12': '멈춤을 통해 시야를 바꾸는 원형이에요. 당장 해결하려 하기보다 관점을 전환하면 막혔던 의미가 드러납니다.',
+  'major-13': '낡은 국면을 끝내고 새로 태어나는 변화의 원형이에요. 상실 자체보다 무엇을 놓아야 다음 단계가 열리는지에 초점을 두세요.',
+  'major-14': '서로 다른 것을 조화롭게 섞는 치유와 절제의 원형이에요. 서두르지 않는 작은 조정이 지속 가능한 균형을 만듭니다.',
+  'major-15': '욕망과 집착을 직시하는 그림자의 원형이에요. 자신을 묶는 패턴을 알아차리면 그것을 선택하고 바꿀 자유도 생깁니다.',
+  'major-16': '허약한 기반을 무너뜨려 진실을 드러내는 각성의 원형이에요. 충격을 피하기보다 드러난 사실을 토대로 다시 세우세요.',
+  'major-17': '상처 뒤의 회복과 희망을 비추는 원형이에요. 당장의 성과보다 자신을 회복시키는 방향으로 꾸준히 나아가세요.',
+  'major-18': '불확실성과 무의식을 통과하는 원형이에요. 불안이 사실인지 상상인지 구분하고, 충분히 확인한 뒤 결정하세요.',
+  'major-19': '명료함과 생명력, 기쁨의 원형이에요. 자신을 드러내고 성과를 나누면 주변까지 밝아지는 흐름입니다.',
+  'major-20': '과거를 돌아보고 부름에 응답하는 재평가의 원형이에요. 지나온 경험에서 배운 점을 살려 새로운 결정을 내리세요.',
+  'major-21': '통합과 완성, 다음 순환으로 넘어가는 원형이에요. 성취를 온전히 인정하고 마무리해야 더 넓은 여정이 시작됩니다.',
+};
+
+const SUIT_ESSENCE: Record<string, string> = {
+  wands: '완드는 열정, 창의성, 일의 추진력처럼 불처럼 번지는 에너지를 나타냅니다.',
+  cups: '컵은 감정, 친밀감, 공감과 관계에서 오가는 마음을 나타냅니다.',
+  swords: '소드는 생각, 소통, 판단과 갈등을 해결하는 지성의 영역을 나타냅니다.',
+  pentacles: '펜타클은 돈, 일, 건강과 생활 기반처럼 손에 잡히는 현실을 나타냅니다.',
+};
+
+const RANK_ESSENCE: Record<string, string> = {
+  에이스: '에이스는 해당 영역의 씨앗과 새로운 기회예요. 아직 결과가 아니라 가능성을 어떻게 키우는지가 중요합니다.',
+  '2': '숫자 2는 선택과 균형을 요구해요. 두 요구를 함께 살피고 우선순위를 정해야 합니다.',
+  '3': '숫자 3은 협력과 첫 결실을 뜻해요. 혼자 밀기보다 도움을 주고받을 때 진전이 커집니다.',
+  '4': '숫자 4는 구조와 안정을 뜻해요. 기반을 다지되 익숙함이 정체로 굳지 않는지 살펴보세요.',
+  '5': '숫자 5는 갈등과 변화의 시험대예요. 불편함을 피하기보다 문제의 원인을 파악해야 성장할 수 있습니다.',
+  '6': '숫자 6은 회복과 나눔, 조화를 뜻해요. 주고받음이 균형을 이루는지 확인하세요.',
+  '7': '숫자 7은 인내와 점검의 시기예요. 즉각적인 보상보다 지금까지의 선택을 되돌아보고 꾸준히 다듬어야 합니다.',
+  '8': '숫자 8은 숙련과 속도, 반복을 뜻해요. 집중된 노력이 실력을 높이지만 과로하지 않도록 조절하세요.',
+  '9': '숫자 9는 성취 직전의 성숙과 마무리를 뜻해요. 마지막 고비에서 자신을 지키고 결실을 준비하세요.',
+  '10': '숫자 10은 한 주기의 완성과 책임의 무게를 뜻해요. 끝낼 일은 마무리하고 다음 단계에 필요한 짐만 남기세요.',
+  페이지: '페이지는 호기심 많은 학습자예요. 소식이나 첫 시도에 열려 있으면서 실제 경험으로 배우는 단계입니다.',
+  기사: '기사는 행동으로 옮기는 추진자예요. 속도와 방향을 함께 점검해야 열정이 성과로 연결됩니다.',
+  여왕: '여왕은 해당 영역을 성숙하게 돌보고 표현하는 인물이에요. 감각과 돌봄을 발휘하되 자신도 소진시키지 마세요.',
+  왕: '왕은 경험과 책임으로 해당 영역을 이끄는 인물이에요. 장기적인 관점과 안정된 판단으로 주변에 본보기가 됩니다.',
+};
+
+export function getCardEssence(card: DeckCard): string {
+  if (card.id.startsWith('major-')) return MAJOR_ESSENCE[card.id];
+  const [suit, rank] = card.id.split('-');
+  return `${SUIT_ESSENCE[suit] ?? ''} ${RANK_ESSENCE[rank] ?? ''}`;
 }
 
-export function drawSpread(seedKey: string, todayISO: string): DrawnCard[] {
-  const rng = seedRng(`tarot-spread|${seedKey}|${todayISO}`);
-  const shuffled = shuffle(DECK, rng);
-  const picks = shuffled.slice(0, 3);
-  const labels = ['과거', '현재', '미래'];
-  return picks.map((card, i) => ({ position: labels[i], card, reversed: rng() < 0.5 }));
+export function interpretSpread(cards: DrawnCard[]): string {
+  if (cards.length < 2) return '';
+  const majorCount = cards.filter(({ card }) => card.id.startsWith('major-')).length;
+  const suitCounts = cards.reduce<Record<string, number>>((counts, { card }) => {
+    const suit = card.id.split('-')[0];
+    if (suit !== 'major') counts[suit] = (counts[suit] ?? 0) + 1;
+    return counts;
+  }, {});
+  const repeatedSuit = Object.entries(suitCounts).find(([, count]) => count > 1)?.[0];
+  const suitNames: Record<string, string> = {
+    wands: '열정과 행동',
+    cups: '감정과 관계',
+    swords: '생각과 소통',
+    pentacles: '현실과 생활 기반',
+  };
+  const first = cards[0];
+  const last = cards[cards.length - 1];
+  const direction = first.reversed === last.reversed
+    ? '처음의 흐름이 마지막까지 이어지는 모습이에요. 이미 시작된 선택을 꾸준히 밀고 나가되, 같은 패턴이 반복되지 않는지 살펴보세요.'
+    : '처음과 마지막의 방향이 달라지는 흐름이에요. 지금의 선택과 태도에 따라 결과가 바뀔 여지가 있으니, 중간 과정에서 의식적으로 조정할 수 있습니다.';
+  const majorReading = majorCount >= 2
+    ? '메이저 카드가 여러 장이라 이 문제는 단기적인 사건보다 중요한 가치관이나 삶의 전환과 맞닿아 있어요.'
+    : majorCount === 1
+      ? '메이저 카드가 한 장 있어 그 위치의 주제가 이번 흐름에서 특히 중요한 전환점이 됩니다.'
+      : '마이너 카드가 중심이라 거대한 운명보다 일상의 선택과 실천이 결과를 만들어가는 흐름이에요.';
+  const suitReading = repeatedSuit
+    ? `${suitNames[repeatedSuit]} 카드가 반복되어 그 영역이 이야기 전체의 중심입니다. 다른 문제보다 이 주제를 먼저 정리하면 흐름이 풀리기 쉬워요.`
+    : '서로 다른 영역의 카드가 함께 나와 한 가지 방식만 고집하기보다 감정·생각·현실의 균형을 함께 살펴야 합니다.';
+  const reversalCount = cards.filter(({ reversed }) => reversed).length;
+  const reversalReading = reversalCount === 0
+    ? '모두 정방향이라 에너지가 비교적 바깥으로 잘 표현돼요. 기회를 구체적인 행동으로 연결해보세요.'
+    : reversalCount === cards.length
+      ? '모두 역방향이라 에너지가 안으로 모이거나 지연될 수 있어요. 무리하게 밀기보다 막힌 이유와 준비 상태를 먼저 확인하세요.'
+      : '정방향과 역방향이 섞여 있어 가능성과 조정 과제가 함께 보입니다. 잘되는 부분은 살리고 역방향 카드가 가리키는 습관은 점검하세요.';
+
+  return [direction, majorReading, suitReading, reversalReading].join(' ');
 }
